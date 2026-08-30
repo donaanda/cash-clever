@@ -166,6 +166,8 @@ const LoanNavigation = () => {
   // Current section.
   const currentSectionId = currentQuestion?.sectionId;
 
+  const currentSectionLabel = currentQuestion?.sectionLabel ?? "";
+
   const currentQuestionIndex = visibleQuestions.findIndex((item) => item.questionId === currentQuestionId);
 
   const isLastQuestion = currentQuestionIndex === visibleQuestions.length - 1;
@@ -305,7 +307,7 @@ const LoanNavigation = () => {
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="w-full flex items-center justify-center gap-1.5 text-[15px] font-bold text-slate-900 px-2 py-1 rounded-lg hover:bg-slate-50 transition-colors"
               >
-                {currentSection.label}
+                {currentSectionLabel}
                 <ChevronDown
                   size={15}
                   className={`text-slate-400 transition-transform ${
@@ -314,41 +316,88 @@ const LoanNavigation = () => {
                 />
               </button>
 
+              {/* Dropdown */}
               {isMenuOpen && (
                 <ul className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-64 max-h-80 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-lg shadow-slate-900/10 p-1.5 z-10">
-                  {visibleSections.map((section) => (
-                    <li key={section.id}>
-                      {/* Section header (not clickable to select, just a label) */}
-                      <p className="text-xs px-2.5 py-1.5 text-slate-400 font-semibold uppercase tracking-wide">
-                        {section.label}
-                      </p>
+                  {visibleSectionIds.map(
+                    (sectionId) => {
+                      const sectionQuestions =
+                        getQuestionsForSection(
+                          sectionId
+                        );
 
-                     
-                      <ul className="mb-1 pl-4 ml-1 border-l border-slate-100">
-                        {section.questions.map((question) => {
-                          const isSelected = question.id === currentQuestionId;
-                          const answered = isAnswered(question.id);
+                      if (sectionQuestions.length === 0) {
+                        return null;
+                      }
 
-                          let textColor = "text-slate-300"; // not answered yet
-                          if (answered) textColor = "text-slate-700 font-medium";
-                          if (isSelected) textColor = "text-slate-900 font-semibold";
+                      const sectionLabel =
+                        sectionQuestions[0]
+                          .sectionLabel;
 
-                          return (
-                            <li key={question.id}>
-                              <button
-                                onClick={() => selectQuestion(question.id)}
-                                className={`w-full text-left text-sm px-2.5 py-1.5 rounded-md transition-colors hover:bg-slate-50 ${textColor} ${
-                                  isSelected ? "bg-blue-50" : ""
-                                }`}
-                              >
-                                {question.label}
-                              </button>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </li>
-                  ))}
+                      return (
+                        <li key={sectionId}>
+                          {/* Section label */}
+                          <p className="text-xs px-2.5 py-1.5 text-slate-400 font-semibold uppercase tracking-wide">
+                            {sectionLabel}
+                          </p>
+
+                          {/* Questions */}
+                          <ul className="mb-1 pl-4 ml-1 border-l border-slate-100">
+                            {sectionQuestions.map(
+                              (question) => {
+                                const isSelected =
+                                  question.questionId ===
+                                  currentQuestionId;
+
+                                const answered =
+                                  isAnswered(
+                                    question.questionId
+                                  );
+
+                                let textColor =
+                                  "text-slate-300";
+
+                                if (answered) {
+                                  textColor =
+                                    "text-slate-700 font-medium";
+                                }
+
+                                if (isSelected) {
+                                  textColor =
+                                    "text-slate-900 font-semibold";
+                                }
+
+                                return (
+                                  <li
+                                    key={
+                                      question.questionId
+                                    }
+                                  >
+                                    <button
+                                      onClick={() =>
+                                        selectQuestion(
+                                          question.questionId
+                                        )
+                                      }
+                                      className={`w-full text-left text-sm px-2.5 py-1.5 rounded-md transition-colors hover:bg-slate-50 ${textColor} ${
+                                        isSelected
+                                          ? "bg-blue-50"
+                                          : ""
+                                      }`}
+                                    >
+                                      {
+                                        question.questionLabel
+                                      }
+                                    </button>
+                                  </li>
+                                );
+                              }
+                            )}
+                          </ul>
+                        </li>
+                      );
+                    }
+                  )}
                 </ul>
               )}
             </div>
@@ -376,31 +425,44 @@ const LoanNavigation = () => {
           {/* The actual question the person answers */}
           <div className="mt-4 pt-4 border-t border-slate-200">
             <span className="block text-xs font-medium text-slate-400 mb-1">
-              {currentSection.label}
+              {currentSectionLabel}
             </span>
+
             <label
               htmlFor="answer-input"
               className="block text-base font-semibold text-slate-900 mb-2"
             >
-              {currentQuestion.label}
+              {currentQuestion?.questionLabel}
             </label>
+
             <input
               id="answer-input"
               type="text"
               placeholder="Type your answer"
-              value={answers[currentQuestion.id] ?? ""}
+              value={
+                answers[
+                  currentQuestion?.questionId ?? ""
+                ] ?? ""
+              }
               onChange={(event) =>
-                updateAnswer(currentQuestion.id, event.target.value)
+                currentQuestion &&
+                updateAnswer(
+                  currentQuestion.questionId,
+                  event.target.value
+                )
               }
               className="w-full text-sm px-3 py-2 rounded-lg border border-slate-200 text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500"
             />
 
+            {/* Continue */}
             <button
               onClick={goToNextQuestion}
               disabled={isLastQuestion}
               className="mt-3 w-full text-sm font-semibold px-3 py-2 rounded-lg bg-blue-600 text-white transition-colors hover:bg-blue-700 disabled:bg-slate-100 disabled:text-slate-300 disabled:cursor-not-allowed"
             >
-              {isLastQuestion ? "Last question" : "Continue"}
+              {isLastQuestion
+                ? "Last question"
+                : "Continue"}
             </button>
           </div>
         </div>
