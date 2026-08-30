@@ -4,48 +4,140 @@ import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 
 const SECTIONS = [
   {
-    id: "personal-info",
-    label: "Personal info",
-    questions: [
-      { id: "pi-veteran", label: "Veteran status" },
-      { id: "pi-birthday", label: "Birthday" },
-      { id: "pi-address", label: "Address" },
-      { id: "pi-employment", label: "Employment" },
-      { id: "pi-job-duration", label: "Job duration" },
-      { id: "pi-salary", label: "Salary" },
-      { id: "pi-credit", label: "Credit" },
-    ],
+    sectionId: "personal-info",
+    sectionLabel: "Personal info",
+    questionId: "pi-veteran",
+    questionLabel: "Veteran status",
+    conditional: false,
   },
   {
-    id: "co-borrower",
-    label: "Co-borrower",
+    sectionId: "personal-info",
+    sectionLabel: "Personal info",
+    questionId: "pi-birthday",
+    questionLabel: "Birthday",
+    conditional: false,
+  },
+  {
+    sectionId: "personal-info",
+    sectionLabel: "Personal info",
+    questionId: "pi-address",
+    questionLabel: "Address",
+    conditional: false,
+  },
+  {
+    sectionId: "personal-info",
+    sectionLabel: "Personal info",
+    questionId: "pi-employment",
+    questionLabel: "Employment",
+    conditional: false,
+  },
+  {
+    sectionId: "personal-info",
+    sectionLabel: "Personal info",
+    questionId: "pi-job-duration",
+    questionLabel: "Job duration",
+    conditional: false,
+  },
+  {
+    sectionId: "personal-info",
+    sectionLabel: "Personal info",
+    questionId: "pi-salary",
+    questionLabel: "Salary",
+    conditional: false,
+  },
+  {
+    sectionId: "personal-info",
+    sectionLabel: "Personal info",
+    questionId: "pi-credit",
+    questionLabel: "Credit",
+    conditional: false,
+  },
+
+  {
+    sectionId: "co-borrower",
+    sectionLabel: "Co-borrower",
+    questionId: "cb-name",
+    questionLabel: "Legal name",
     conditional: true,
-    questions: [
-      { id: "cb-name", label: "Legal name" },
-      { id: "cb-dob", label: "Date of birth" },
-      { id: "cb-relationship", label: "Relationship to borrower" },
-    ],
   },
   {
-    id: "car-house-details",
-    label: "Car / house details",
-    questions: [
-      { id: "cd-make-model", label: "Make and model" },
-      { id: "cd-year", label: "Vehicle year" },
-      { id: "cd-value", label: "Vehicle value" },
-      { id: "hd-property-type", label: "Property type" },
-      { id: "hd-price", label: "Purchase price" },
-      { id: "hd-occupancy", label: "Occupancy" },
-    ],
+    sectionId: "co-borrower",
+    sectionLabel: "Co-borrower",
+    questionId: "cb-dob",
+    questionLabel: "Date of birth",
+    conditional: true,
   },
   {
-    id: "loan-calc",
-    label: "Loan / mortgage calculation",
-    questions: [
-      { id: "lc-price", label: "Purchase price" },
-      { id: "lc-down", label: "Down payment" },
-      { id: "lc-term", label: "Loan term" },
-    ],
+    sectionId: "co-borrower",
+    sectionLabel: "Co-borrower",
+    questionId: "cb-relationship",
+    questionLabel: "Relationship to borrower",
+    conditional: true,
+  },
+
+  {
+    sectionId: "car-house-details",
+    sectionLabel: "Car / house details",
+    questionId: "cd-make-model",
+    questionLabel: "Make and model",
+    conditional: false,
+  },
+  {
+    sectionId: "car-house-details",
+    sectionLabel: "Car / house details",
+    questionId: "cd-year",
+    questionLabel: "Vehicle year",
+    conditional: false,
+  },
+  {
+    sectionId: "car-house-details",
+    sectionLabel: "Car / house details",
+    questionId: "cd-value",
+    questionLabel: "Vehicle value",
+    conditional: false,
+  },
+  {
+    sectionId: "car-house-details",
+    sectionLabel: "Car / house details",
+    questionId: "hd-property-type",
+    questionLabel: "Property type",
+    conditional: false,
+  },
+  {
+    sectionId: "car-house-details",
+    sectionLabel: "Car / house details",
+    questionId: "hd-price",
+    questionLabel: "Purchase price",
+    conditional: false,
+  },
+  {
+    sectionId: "car-house-details",
+    sectionLabel: "Car / house details",
+    questionId: "hd-occupancy",
+    questionLabel: "Occupancy",
+    conditional: false,
+  },
+
+  {
+    sectionId: "loan-calc",
+    sectionLabel: "Loan / mortgage calculation",
+    questionId: "lc-price",
+    questionLabel: "Purchase price",
+    conditional: false,
+  },
+  {
+    sectionId: "loan-calc",
+    sectionLabel: "Loan / mortgage calculation",
+    questionId: "lc-down",
+    questionLabel: "Down payment",
+    conditional: false,
+  },
+  {
+    sectionId: "loan-calc",
+    sectionLabel: "Loan / mortgage calculation",
+    questionId: "lc-term",
+    questionLabel: "Loan term",
+    conditional: false,
   },
 ];
 
@@ -61,57 +153,38 @@ const LoanNavigation = () => {
 
   const menuRef = useRef(null);
 
-
-  const visibleSections = [];
-  for (const section of SECTIONS) {
-    const shouldSkip = section.conditional && !hasCoBorrower;
-    if (!shouldSkip) {
-      visibleSections.push(section);
-    }
-  }
-
-  const allQuestions = [];
-  for (const section of visibleSections) {
-    for (const question of section.questions) {
-      allQuestions.push(question);
-    }
-  }
-
-
-  let currentSection = visibleSections[0];
-  for (const section of visibleSections) {
-    const questionIsInThisSection = section.questions.some(
-      (question) => question.id === currentQuestionId
-    );
-    if (questionIsInThisSection) {
-      currentSection = section;
-      break;
-    }
-  }
-
- 
-  let currentQuestion = currentSection.questions[0];
-  for (const question of currentSection.questions) {
-    if (question.id === currentQuestionId) {
-      currentQuestion = question;
-      break;
-    }
-  }
-
-
-  const currentQuestionIndex = allQuestions.findIndex(
-    (question) => question.id === currentQuestion.id
+  const visibleQuestions = SECTIONS.filter(
+    (item) => !item.conditional || hasCoBorrower
   );
 
+  const visibleSectionIds = [
+    ...new Set(visibleQuestions.map((item) => item.sectionId)),
+  ];
 
-  const isLastQuestion = currentQuestionIndex === allQuestions.length - 1;
+  const currentQuestion = visibleQuestions.find((item) => item.questionId === currentQuestionId) ?? visibleQuestions[0];
 
-  
+  // Current section.
+  const currentSectionId = currentQuestion?.sectionId;
+
+  const currentSectionLabel = currentQuestion?.sectionLabel ?? "";
+
+  const currentQuestionIndex = visibleQuestions.findIndex((item) => item.questionId === currentQuestionId);
+
+  const isLastQuestion = currentQuestionIndex === visibleQuestions.length - 1;
+
   const questionsCompleted = currentQuestionIndex + 1;
-  const totalQuestions = allQuestions.length;
+  const totalQuestions = visibleQuestions.length;
+  
   const progressPercent = (questionsCompleted / totalQuestions) * 100;
 
-  
+  // Questions grouped by section for display only.
+  // SECTIONS itself remains completely flat.
+  const getQuestionsForSection = (sectionId: string) => {
+    return visibleQuestions.filter(
+      (item) => item.sectionId === sectionId
+    );
+  };
+
   function isAnswered(questionId) {
     const answerText = answers[questionId];
     if (!answerText) return false;
@@ -129,51 +202,84 @@ const LoanNavigation = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Find the first question belonging to a section.
+  function getFirstQuestionInSection(sectionId: string) {
+    return visibleQuestions.find(
+      (item) => item.sectionId === sectionId
+    );
+  }
+
+  // Go to previous section.
   function goToPreviousSection() {
-    const sectionIndex = visibleSections.indexOf(currentSection);
-    if (sectionIndex > 0) {
-      const previousSection = visibleSections[sectionIndex - 1];
-      setCurrentQuestionId(previousSection.questions[0].id);
+    const currentSectionIndex = visibleSectionIds.indexOf(
+      currentSectionId
+    );
+
+    if (currentSectionIndex > 0) {
+      const previousSectionId =
+        visibleSectionIds[currentSectionIndex - 1];
+
+      const previousQuestion =
+        getFirstQuestionInSection(previousSectionId);
+
+      if (previousQuestion) {
+        setCurrentQuestionId(previousQuestion.questionId);
+      }
     }
   }
 
+  // Go to next section.
   function goToNextSection() {
-    const sectionIndex = visibleSections.indexOf(currentSection);
-    if (sectionIndex < visibleSections.length - 1) {
-      const nextSection = visibleSections[sectionIndex + 1];
-      setCurrentQuestionId(nextSection.questions[0].id);
+    const currentSectionIndex = visibleSectionIds.indexOf(currentSectionId);
+
+    if ( currentSectionIndex >= 0 && currentSectionIndex < visibleSectionIds.length - 1) {
+      const nextSectionId = visibleSectionIds[currentSectionIndex + 1];
+
+      const nextQuestion = getFirstQuestionInSection(nextSectionId);
+
+      if (nextQuestion) {
+        setCurrentQuestionId(nextQuestion.questionId);
+      }
     }
   }
 
+  // Go to next question.
   function goToNextQuestion() {
     if (!isLastQuestion) {
-      const nextQuestion = allQuestions[currentQuestionIndex + 1];
-      setCurrentQuestionId(nextQuestion.id);
+      const nextQuestion = visibleQuestions[currentQuestionIndex + 1];
+
+      setCurrentQuestionId(nextQuestion.questionId);
     }
   }
 
-  function selectQuestion(questionId) {
+  // Select question from dropdown.
+  function selectQuestion(questionId: string) {
     setCurrentQuestionId(questionId);
     setIsMenuOpen(false);
   }
 
-  function updateAnswer(questionId, value) {
+  // Update answer.
+  function updateAnswer(questionId: string, value: string) {
     setAnswers((previousAnswers) => ({
       ...previousAnswers,
       [questionId]: value,
     }));
   }
 
-  function handleCoBorrowerChange(nextHasCoBorrower) {
+  // Toggle co-borrower.
+  function handleCoBorrowerChange(nextHasCoBorrower: boolean) {
     setHasCoBorrower(nextHasCoBorrower);
-    if (!nextHasCoBorrower && currentSection.id === "co-borrower") {
-      setCurrentQuestionId(SECTIONS[0].questions[0].id);
+
+    // If co-borrower is disabled while viewing
+    // a co-borrower question, move back to the first question.
+    if (!nextHasCoBorrower && currentSectionId === "co-borrower") {
+      setCurrentQuestionId(visibleQuestions[0].questionId);
     }
   }
 
-  const sectionIndex = visibleSections.indexOf(currentSection);
-  const isFirstSection = sectionIndex === 0;
-  const isLastSection = sectionIndex === visibleSections.length - 1;
+  const currentSectionIndex = visibleSectionIds.indexOf(currentSectionId);
+  const isFirstSection = currentSectionIndex === 0;
+  const isLastSection = currentSectionIndex === visibleSectionIds.length - 1;
 
   return (
     <div className="min-h-screen bg-slate-100 flex items-start justify-center p-12">
@@ -201,7 +307,7 @@ const LoanNavigation = () => {
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="w-full flex items-center justify-center gap-1.5 text-[15px] font-bold text-slate-900 px-2 py-1 rounded-lg hover:bg-slate-50 transition-colors"
               >
-                {currentSection.label}
+                {currentSectionLabel}
                 <ChevronDown
                   size={15}
                   className={`text-slate-400 transition-transform ${
@@ -210,41 +316,88 @@ const LoanNavigation = () => {
                 />
               </button>
 
+              {/* Dropdown */}
               {isMenuOpen && (
                 <ul className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-64 max-h-80 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-lg shadow-slate-900/10 p-1.5 z-10">
-                  {visibleSections.map((section) => (
-                    <li key={section.id}>
-                      {/* Section header (not clickable to select, just a label) */}
-                      <p className="text-xs px-2.5 py-1.5 text-slate-400 font-semibold uppercase tracking-wide">
-                        {section.label}
-                      </p>
+                  {visibleSectionIds.map(
+                    (sectionId) => {
+                      const sectionQuestions =
+                        getQuestionsForSection(
+                          sectionId
+                        );
 
-                     
-                      <ul className="mb-1 pl-4 ml-1 border-l border-slate-100">
-                        {section.questions.map((question) => {
-                          const isSelected = question.id === currentQuestionId;
-                          const answered = isAnswered(question.id);
+                      if (sectionQuestions.length === 0) {
+                        return null;
+                      }
 
-                          let textColor = "text-slate-300"; // not answered yet
-                          if (answered) textColor = "text-slate-700 font-medium";
-                          if (isSelected) textColor = "text-slate-900 font-semibold";
+                      const sectionLabel =
+                        sectionQuestions[0]
+                          .sectionLabel;
 
-                          return (
-                            <li key={question.id}>
-                              <button
-                                onClick={() => selectQuestion(question.id)}
-                                className={`w-full text-left text-sm px-2.5 py-1.5 rounded-md transition-colors hover:bg-slate-50 ${textColor} ${
-                                  isSelected ? "bg-blue-50" : ""
-                                }`}
-                              >
-                                {question.label}
-                              </button>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </li>
-                  ))}
+                      return (
+                        <li key={sectionId}>
+                          {/* Section label */}
+                          <p className="text-xs px-2.5 py-1.5 text-slate-400 font-semibold uppercase tracking-wide">
+                            {sectionLabel}
+                          </p>
+
+                          {/* Questions */}
+                          <ul className="mb-1 pl-4 ml-1 border-l border-slate-100">
+                            {sectionQuestions.map(
+                              (question) => {
+                                const isSelected =
+                                  question.questionId ===
+                                  currentQuestionId;
+
+                                const answered =
+                                  isAnswered(
+                                    question.questionId
+                                  );
+
+                                let textColor =
+                                  "text-slate-300";
+
+                                if (answered) {
+                                  textColor =
+                                    "text-slate-700 font-medium";
+                                }
+
+                                if (isSelected) {
+                                  textColor =
+                                    "text-slate-900 font-semibold";
+                                }
+
+                                return (
+                                  <li
+                                    key={
+                                      question.questionId
+                                    }
+                                  >
+                                    <button
+                                      onClick={() =>
+                                        selectQuestion(
+                                          question.questionId
+                                        )
+                                      }
+                                      className={`w-full text-left text-sm px-2.5 py-1.5 rounded-md transition-colors hover:bg-slate-50 ${textColor} ${
+                                        isSelected
+                                          ? "bg-blue-50"
+                                          : ""
+                                      }`}
+                                    >
+                                      {
+                                        question.questionLabel
+                                      }
+                                    </button>
+                                  </li>
+                                );
+                              }
+                            )}
+                          </ul>
+                        </li>
+                      );
+                    }
+                  )}
                 </ul>
               )}
             </div>
@@ -272,31 +425,44 @@ const LoanNavigation = () => {
           {/* The actual question the person answers */}
           <div className="mt-4 pt-4 border-t border-slate-200">
             <span className="block text-xs font-medium text-slate-400 mb-1">
-              {currentSection.label}
+              {currentSectionLabel}
             </span>
+
             <label
               htmlFor="answer-input"
               className="block text-base font-semibold text-slate-900 mb-2"
             >
-              {currentQuestion.label}
+              {currentQuestion?.questionLabel}
             </label>
+
             <input
               id="answer-input"
               type="text"
               placeholder="Type your answer"
-              value={answers[currentQuestion.id] ?? ""}
+              value={
+                answers[
+                  currentQuestion?.questionId ?? ""
+                ] ?? ""
+              }
               onChange={(event) =>
-                updateAnswer(currentQuestion.id, event.target.value)
+                currentQuestion &&
+                updateAnswer(
+                  currentQuestion.questionId,
+                  event.target.value
+                )
               }
               className="w-full text-sm px-3 py-2 rounded-lg border border-slate-200 text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500"
             />
 
+            {/* Continue */}
             <button
               onClick={goToNextQuestion}
               disabled={isLastQuestion}
               className="mt-3 w-full text-sm font-semibold px-3 py-2 rounded-lg bg-blue-600 text-white transition-colors hover:bg-blue-700 disabled:bg-slate-100 disabled:text-slate-300 disabled:cursor-not-allowed"
             >
-              {isLastQuestion ? "Last question" : "Continue"}
+              {isLastQuestion
+                ? "Last question"
+                : "Continue"}
             </button>
           </div>
         </div>

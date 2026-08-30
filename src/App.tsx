@@ -6,7 +6,7 @@ export function App() {
    
       <Router>
       
-        <main className="container">
+        <main>
           <Routes>
             <Route path="/" element={<LoanNavigation />} />
           </Routes>
